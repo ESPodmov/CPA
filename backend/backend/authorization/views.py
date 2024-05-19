@@ -55,9 +55,6 @@ class UserView(APIView):
     @needs_authorization
     def get(self, request, authorized_user, user_type) -> Response:
         find = [{key: request.GET.get(key)} for key in ["id", "pk", "username", "phone"]]
-        # if not find:
-        #     return Response(status=status.HTTP_400_BAD_REQUEST, content_type="json",
-        #                     data={"error": _("Wrong data provided")})
 
         if user_type in (UserType.admin or UserType.manager):
             if find:

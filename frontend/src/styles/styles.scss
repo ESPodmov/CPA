@@ -34,7 +34,7 @@ button {
     background-color: $primary-controls-dark-color;
   }
 
-  .big {
+  &.big_btn {
     padding: 8px 40px;
   }
 }

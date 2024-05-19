@@ -1,6 +1,6 @@
 export type BaseUserData = {
-    username: string,
-    phone: string,
+    username: string| null,
+    phone: string | null,
     email: string,
     password: string
 }

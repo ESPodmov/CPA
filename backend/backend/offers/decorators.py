@@ -8,7 +8,7 @@ from .utils import generate_secret
 
 def token_required(view_func):
     @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
+    def _wrapped_view(obj, request, *args, **kwargs):
         token = request.headers.get('Authorization')
 
         if not token:
@@ -29,6 +29,6 @@ def token_required(view_func):
 
         except SecretKey.DoesNotExist:
             return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
-        return view_func(request, *args, **kwargs)
+        return view_func(obj, request, *args, **kwargs)
 
     return _wrapped_view

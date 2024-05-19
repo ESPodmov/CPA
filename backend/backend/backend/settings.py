@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "news.apps.NewsConfig",
     'offers.apps.OffersConfig',
     'stats.apps.StatsConfig',
-    'payouts.apps.PayoutsConfig'
+    'payouts.apps.PayoutsConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'https://*'
 ]
 
 ROOT_URLCONF = 'backend.urls'

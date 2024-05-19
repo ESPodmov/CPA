@@ -3,13 +3,14 @@ from .models import BaseUser, User, Admin, Manager
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField(required=False)
+
     class Meta:
         model = BaseUser
         fields = (
             "pk",
             "username",
             "email",
-            "phone"
         )
         read_only_fields = (
             "pk",
@@ -23,9 +24,21 @@ class BaseUserSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(BaseUserSerializer):
+    fio = serializers.CharField(required=False)
+    tg_username = serializers.CharField(required=False)
+    name = serializers.CharField(required=False)
+
     class Meta:
         model = BaseUser
-        fields = BaseUserSerializer.Meta.fields + ("balance",)
+        fields = BaseUserSerializer.Meta.fields + (
+            "balance",
+            "fio",
+            "tg_username",
+            "name",
+        )
+        read_only_fields = (
+            "balance",
+        )
 
 
 class AdminSerializer(BaseUserSerializer):

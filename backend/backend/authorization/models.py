@@ -15,19 +15,19 @@ class BaseUser(AbstractBaseUser):
 
     username_validator = UnicodeUsernameValidator()
 
-    username = models.CharField(
-        _("username"),
-        max_length=60,
-        unique=True,
-        help_text=_(
-            "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-        ),
-        validators=[username_validator],
-        error_messages={
-            "unique": _("A user with that username already exists."),
-        },
-    )
-    phone = CharField(max_length=14, null=False, blank=False, unique=True)
+    # username = models.CharField(
+    #     _("username"),
+    #     max_length=60,
+    #     unique=True,
+    #     help_text=_(
+    #         "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+    #     ),
+    #     validators=[username_validator],
+    #     error_messages={
+    #         "unique": _("A user with that username already exists."),
+    #     },
+    # )
+    phone = CharField(max_length=14, null=False, blank=True, unique=True)
     email = EmailField(max_length=60, null=False, blank=False, unique=True)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
@@ -49,7 +49,7 @@ class BaseUser(AbstractBaseUser):
         # Вызываем create_user только если объект еще не сохранен в базе данных
         if not self.pk and "using" not in kwargs:
             # Вызываем метод create_user, передавая аргументы объекта модели
-            User.objects.create_user(username=self.username, email=self.email, password=self.password, phone=self.phone)
+            User.objects.create_user(email=self.email, password=self.password, phone=self.phone)
             return
         # Вызываем оригинальный метод save
         super(BaseUser, self).save(*args, **kwargs)
@@ -61,6 +61,9 @@ class User(BaseUser):
         verbose_name_plural = "Users"
 
     balance = FloatField(null=False, default=0.0, blank=False)
+    fio = CharField(max_length=255, null=False, blank=True)
+    name = CharField(max_length=255, null=False, blank=True)
+    tg_username = CharField(max_length=120, null=False, blank=True)
 
 
 class Admin(BaseUser):
