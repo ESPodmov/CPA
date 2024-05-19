@@ -1,0 +1,37 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+.header_container {
+    width: $content-width;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    justify-content: space-between;
+    height: 88px;
+    min-width: $full-size;
+
+    .link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .logo {
+        font-size: 24px;
+        line-height: 29.26px;
+        font-weight: 600;
+
+        .dark {
+            color: $primary-color;
+        }
+
+        .light {
+            color: $primary-light-color
+        }
+
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+}

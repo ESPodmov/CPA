@@ -1,0 +1,40 @@
+$primary-controls-color: #FF4E50;
+$primary-controls-dark-color: #f24e51;
+$secondary-controls-color: #E1E2E4;
+
+$primary-color: #292929;
+$primary-light-color: #FFFFFF;
+$base-font-size: 16px;
+// $secondary-color: 
+
+$content-width: 70%;
+$full-size: 1280px /1.5;
+
+
+section,
+header {
+  width: 100%;
+  // margin: auto;
+}
+
+button {
+  border-radius: 8px;
+  padding: 8px 24px;
+  background-color: $primary-controls-color;
+  color: $primary-light-color;
+  border: none;
+  line-height: 24px;
+  font-size: $base-font-size;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: $primary-controls-dark-color;
+  }
+
+  .big {
+    padding: 8px 40px;
+  }
+}

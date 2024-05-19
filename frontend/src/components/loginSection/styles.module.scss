@@ -1,0 +1,108 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+
+.login_container {
+    margin: auto;
+    font-size: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 592px;
+    // min-width: $full-size;
+
+
+    .header_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .switcher_container {
+        gap: 10px;
+        display: flex;
+        margin-bottom: 32px;
+
+        button {
+            line-height: 18.75px;
+        }
+
+        .switcher {
+            border-radius: 24px;
+            padding: 16px;
+            width: 220px;
+
+            &.active {
+                background-color: $primary-color;
+                color: $primary-light-color;
+            }
+
+            &.inactive {
+                background-color: #E1E2E4;
+                color: $primary-color;
+            }
+
+        }
+    }
+
+    .form_container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main_input_container {
+        display: flex;
+        gap: 16px;
+        width: 100%;
+        flex-direction: column;
+
+        .input_container {
+            width: 100%;
+            position: relative;
+
+            input {
+
+                $input-background-color: #F5F5F5;
+
+
+                width: 100%;
+                height: 56px;
+                font-size: 16px;
+                border-radius: 8px;
+                border: none;
+                padding: 18px 16px;
+                line-height: 24px;
+                background-color: $input-background-color;
+                overflow-y: visible;
+
+                &:focus-visible {
+                    outline: none;
+                }
+
+                &:focus+.placeholder {
+                    transform: translateY(-50%);
+                    top: 0;
+                    left: 20px;
+                    font-size: 12px;
+                    background-color: linear-gradient(180deg, #FFFFFF 0%, $input-background-color 100%);
+                }
+
+            }
+
+            .placeholder {
+                color: #656565;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 16px;
+                transition: all 0.3s ease-in-out;
+            }
+
+        }
+
+    }
+}

@@ -1,0 +1,16 @@
+$font-montserrat: 'Montserrat', sans-serif;
+
+$font-roboto: 'Roboto', sans-serif;
+
+.main_text {
+    font-family: $font-montserrat;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 39.01px;
+    margin-bottom: 16px;
+    margin-top: 0;
+    font-family: $font-montserrat;
+}
