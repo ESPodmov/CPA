@@ -1,8 +1,9 @@
 export type BaseUserData = {
-    username: string| null,
-    phone: string | null,
+    username?: string,
+    phone?: string,
     email: string,
-    password: string
+    password: string,
+    
 }
 
 export type UpdateUserData = Partial<BaseUserData>

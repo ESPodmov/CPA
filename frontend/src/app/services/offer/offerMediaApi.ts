@@ -4,7 +4,7 @@ import { BaseOfferMediaData, UpdateOfferMediaData } from '../../../types/api/off
 
 export const offerMediaApi = createApi({
     reducerPath: "offerMediaApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
         updateOfferMedia: builder.mutation<any, { data: UpdateOfferMediaData, offer: string | number, pk: string | number }>({
             query: ({data, offer, pk}) => ({

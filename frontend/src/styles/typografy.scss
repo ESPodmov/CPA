@@ -13,4 +13,11 @@ h1 {
     margin-bottom: 16px;
     margin-top: 0;
     font-family: $font-montserrat;
+
+    &.content_header {
+        font-family: $font-roboto;
+        line-height: 38px;
+        margin-bottom: 0;
+    }
+
 }

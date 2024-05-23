@@ -1,38 +1,46 @@
 import re
 from typing import Union, Type
 
-from django.contrib.auth import login, logout
-from .utils import authenticate, get_user, UserType
+from django.contrib.auth import login, logout, authenticate
 from django.utils.translation import gettext_lazy as _
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .models import Admin, Manager, User
-from django.contrib.auth.models import User as BaseUser
-from .serializers import AdminSerializer, UserSerializer, ManagerSerializer, BaseUserSerializer
+from .models import User, BaseUser
+from .serializers import UserSerializer, BaseUserSerializer
 from django.db.utils import IntegrityError
 from .decorators import needs_authorization
+from rest_framework.permissions import AllowAny
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from .utils import get_user
 
 
-@api_view(["POST"])
-def sign_in(request):
-    username = request.POST.get("username")
-    if not username:
-        phone = request.POST.get("phone")
-        identify = {"phone": phone}
-    else:
-        identify = {"username": username}
+# @csrf_exempt
+@api_view(["GET"])
+@ensure_csrf_cookie
+def get_csrf(request):
+    return Response({"message": "set"})
+    # response = Response({'detail': 'CSRF cookie set'})
+    # q = get_token(request)
+    # print(q)
+    # response.set_cookie('csrftoken', q, httponly=False)
+    # return response
 
-    password = request.POST.get("password")
-    user = authenticate(**identify, password=password)
 
-    if not user:
-        return Response({"error": _("Unauthorized")}, status=status.HTTP_401_UNAUTHORIZED, )
+class LoginView(APIView):
+    permission_classes = (AllowAny,)
 
-    login(request, user)
-    return Response({"success": _("Authorized")}, status=status.HTTP_200_OK)
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            res = Response({"message": "Login successful"}, status=200)
+            return res
+        else:
+            return Response({"error": "Invalid credentials"}, status=400)
 
 
 @api_view(["POST"])
@@ -41,22 +49,27 @@ def log_out(request):
     return Response({"success": _("Logged out")}, status=status.HTTP_200_OK)
 
 
+def select_serializer(user: BaseUser) -> Union[Type[UserSerializer], Type[BaseUserSerializer]]:
+    if isinstance(user, User):
+        return UserSerializer
+    elif isinstance(user, BaseUser):
+        return BaseUserSerializer
+
+
+def get_serializer(user: BaseUser, partial: bool = False, data=None) -> Union[UserSerializer, BaseUserSerializer]:
+    serializer = select_serializer(user)
+    if not data:
+        return serializer(user, partial=partial)
+    return serializer(user, partial=partial, data=data)
+
+
 class UserView(APIView):
 
-    def get_serializer(self, user: BaseUser, partial: bool = False) -> Union[
-        UserSerializer, AdminSerializer, ManagerSerializer]:
-        if isinstance(user, User):
-            return UserSerializer(user, partial=partial)
-        elif isinstance(user, Admin):
-            return AdminSerializer(user, partial=partial)
-        else:
-            return ManagerSerializer(user, partial=partial)
-
     @needs_authorization
-    def get(self, request, authorized_user, user_type) -> Response:
+    def get(self, request, authorized_user) -> Response:
         find = [{key: request.GET.get(key)} for key in ["id", "pk", "username", "phone"]]
 
-        if user_type in (UserType.admin or UserType.manager):
+        if authorized_user.is_staff or authorized_user.is_admin or authorized_user.is_superuser:
             if find:
                 user = get_user(**find[0])
             else:
@@ -64,9 +77,7 @@ class UserView(APIView):
         else:
             user = authorized_user
 
-        # if not user:
-        #     return Response({"error": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
-        serializer = self.get_serializer(user)
+        serializer = get_serializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request) -> Response:
@@ -74,23 +85,20 @@ class UserView(APIView):
         request may contain type param in order to determine which type of user create
         :type (admin, manager, user) or blank
         """
-        user_type = request.POST.get("type", "user")
-        current_user = get_user(pk=request.user.pk)
-        new_username = request.POST.get("username")
-        new_password = request.POST.get("password")
-        new_phone = request.POST.get("phone")
-        new_phone = ''.join(re.findall(r'\d+', new_phone))
-        new_email = request.POST.get("email")
-        user_data = {"username": new_username, "password": new_password, "phone": new_phone, "email": new_email}
 
+        user_type = request.data.get("type", "user")
+        current_user = get_user(pk=request.user.pk)
+        new_password = request.data.get("password")
+        new_email = request.data.get("email")
+        user_data = {"password": new_password, "email": new_email}
         new_user = None
         if user_type == "user" and not current_user:
             new_user = User(**user_data)
-        elif isinstance(current_user, Admin):
+        elif current_user.is_admin:
             if user_type == "manager":
-                new_user = Manager(**user_data)
-            elif user_type == "admin" and current_user.is_main:
-                new_user = Admin(**user_data)
+                new_user = BaseUser.objects.create_manager(**user_data)
+            elif user_type == "admin" and current_user.is_superuser:
+                new_user = BaseUser.objects.create_admin(**user_data)
 
         if not new_user:
             return Response({"error": _("Permission denied")}, status=status.HTTP_403_FORBIDDEN)
@@ -112,7 +120,7 @@ class UserView(APIView):
         return Response({"success": "User successfully created"}, status=status.HTTP_200_OK)
 
     @needs_authorization
-    def delete(self, request, authorized_user, user_type) -> Response:
+    def delete(self, request, authorized_user) -> Response:
         pk = request.POST.get("pk")
         if pk:
             user = get_user(pk=pk)
@@ -123,12 +131,12 @@ class UserView(APIView):
 
         is_deleted = False
 
-        if authorized_user.pk == pk:
+        if authorized_user.pk == user.pk:
             is_deleted = True
-        elif user_type == UserType.admin:
+        elif authorized_user.is_admin:
             if authorized_user.is_main:
                 is_deleted = True
-            elif user_type in (UserType.user, UserType.manager):
+            elif authorized_user.is_staff or not authorized_user.is_staff:
                 is_deleted = False
 
         if not is_deleted:
@@ -138,14 +146,15 @@ class UserView(APIView):
         return Response({"success": "You have deleted account"}, status.HTTP_200_OK)
 
     @needs_authorization
-    def patch(self, request, authorized_user, user_type) -> Response:
-        edit_user_pk = request.POST.get("pk", None)
+    def patch(self, request, authorized_user) -> Response:
+        edit_user_pk = request.data.get("pk", None)
         if not edit_user_pk:
-            return Response({"error": "Wrong data provided"}, status=status.HTTP_400_BAD_REQUEST)
+            edit_user_pk = request.user.pk
+            # return Response({"error": "Wrong data provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if user_type == UserType.admin:
+        if authorized_user.is_admin:
             change = True
-        elif user_type in (UserType.manager, UserType.user):
+        elif authorized_user.is_staff or not authorized_user.is_staff:
             if authorized_user.pk == edit_user_pk:
                 change = True
             else:
@@ -156,11 +165,11 @@ class UserView(APIView):
         if not change:
             return Response({"error": "Permission denied"}, status=status.HTTP_403_FORBIDDEN)
 
-        current_user = get_user(pk=request.user.pk)
-        serializer = self.get_serializer(current_user, partial=True)
+        edit_user = get_user(pk=edit_user_pk)
+        serializer = get_serializer(edit_user, partial=True, data=request.data)
         if not serializer.is_valid():
             return Response({"error": "Wrong data provided"}, status=status.HTTP_400_BAD_REQUEST)
-        updated_user = serializer.update(current_user, request.POST)
-        if "password" in request.POST:
+        updated_user = serializer.update(edit_user, request.data)
+        if "password" in request.data:
             login(request, updated_user)
-        return Response(self.get_serializer(updated_user).data, status=status.HTTP_200_OK)
+        return Response(get_serializer(updated_user).data, status=status.HTTP_200_OK)

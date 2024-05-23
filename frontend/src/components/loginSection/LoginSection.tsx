@@ -1,17 +1,30 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import classes from './styles.module.scss'
-import { useRegisterUserMutation } from "../../app/services/userApi";
+import { useLoginUserMutation, useRegisterUserMutation, useDeleteUserMutation, useGetCSRFMutation, useLazyGetUserQuery } from "../../app/services/userApi";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../app/futures/user/userSlice";
+import { setAuthenticated } from "../../app/futures/user/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../routes/Routes";
 
 type LoginSectionProps = {
     isLogin: boolean;
 }
 
 const LoginSection: React.FC<LoginSectionProps> = ({ isLogin }) => {
+    const dispatch = useDispatch();
 
     const [tabs, setTabs] = useState({ login: isLogin, register: !isLogin })
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordAgain, setPasswordAgain] = useState("")
+    const [registerUser] = useRegisterUserMutation();
+    const [loginUser] = useLoginUserMutation();
+    const navigate = useNavigate();
+    const [getUser, { data, error }] = useLazyGetUserQuery();
+
 
     const getTabClassName = (isActive: boolean) => {
         return `${classes.switcher} ` + (isActive ? classes.active : classes.inactive)
@@ -38,36 +51,66 @@ const LoginSection: React.FC<LoginSectionProps> = ({ isLogin }) => {
     }
 
     const getActiveTabBtnName = () => {
-        return tabs.login ? "Зарегистрироваться" : "Войти"
-    }
-
-    const handleLogin = () => {
-
+        return tabs.login ? "Войти" : "Зарегистрироваться"
     }
 
 
-    const handleRegister = () => {
+    const getUserAndRedirect = async () => {
+        try {
+            const user = await getUser().unwrap()
+
+            dispatch(setUser(user))
+            dispatch(setAuthenticated(true))
+            navigate(routes.profile.path)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    const handleLogin = async () => {
         try {
             const data = {
                 email, password
             }
-            // const response = useRegisterUserMutation(data);
+
+            const response = await loginUser(data).unwrap()
+            await getUserAndRedirect()
+
 
         } catch (error) {
             console.log(error)
         }
     }
 
-    const handleClick = () => {
+
+    const handleRegister = async () => {
+        try {
+            const data = {
+                email, password
+            }
+
+            try {
+                await registerUser(data)
+                await loginUser(data).unwrap()
+                await getUserAndRedirect();
+            } catch (error) {
+                console.log(error)
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleClick = (event: React.FormEvent) => {
+        event.preventDefault();
         tabs.login ? handleLogin() : handleRegister()
     }
 
-
-    const baseSwitcherClassName = `${classes.switcher}`
-
     return (
         <section>
-            <div className={classes.login_container}>
+            <div className={classes.login_container} id="reg-section">
                 <div className={classes.header_container}>
                     <h1>Станьте партнером Tronius</h1>
                     <span>Рекламировать Tronius - это выгодно!</span>
@@ -83,17 +126,17 @@ const LoginSection: React.FC<LoginSectionProps> = ({ isLogin }) => {
                 <form className={classes.form_container} onSubmit={handleClick}>
                     <div className={classes.main_input_container}>
                         <div className={classes.input_container}>
-                            <input id="email" name="email" onChange={handleEmailChange} />
+                            <input placeholder="" id="email" name="email" onChange={handleEmailChange} />
                             <label className={classes.placeholder} htmlFor="email">Почта</label>
                         </div>
                         <div className={classes.input_container}>
-                            <input id="password" name="password" onChange={handlePasswordChange} />
+                            <input placeholder="" id="password" name="password" onChange={handlePasswordChange} type="password" />
                             <label className={classes.placeholder} htmlFor="password">Пароль</label>
                         </div>
                         {
                             tabs.register &&
                             <div className={classes.input_container}>
-                                <input id="password_again" name="password_again" onChange={handlePasswordAgainChange} />
+                                <input placeholder="" id="password_again" name="password_again" onChange={handlePasswordAgainChange} type="password" />
                                 <label className={classes.placeholder} htmlFor="password_again">Пароль еще раз</label>
                             </div>
                         }
@@ -118,7 +161,7 @@ const LoginSection: React.FC<LoginSectionProps> = ({ isLogin }) => {
                         <span>
                             Для восстановления пароля напишите в поддержку:
                             <a>
-                                supportpartners@internet.ru
+                                CPAPartnersTron@yandex.ru
                             </a>
                         </span>
                     </div>

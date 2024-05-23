@@ -1,0 +1,48 @@
+@import "../../../styles/styles.scss";
+@import "../../../styles/typografy.scss";
+
+.profile_tooltip_container {
+    display: flex;
+    align-items: flex-start;
+    justify-items: flex-start;
+    position: absolute;
+    border-radius: 12px;
+    background-color: $primary-color;
+    padding: 16px;
+    max-width: 360px;
+
+    .profile_tooltip__item {
+        font-size: 16px;
+        line-height: 20px;
+        word-wrap: break-word;
+        fill: rgba(255, 255, 255, 0.6);
+        color: $primary-light-color;
+        display: flex;
+        flex-direction: column;
+
+        &.first {
+            margin-right: 12px;
+        }
+
+        .link {
+            text-decoration: none;
+            color: #579AEB;
+        }
+
+        &.profile_tooltip_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        &.close_icon {
+            display: flex;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: auto;
+            cursor: pointer;
+        }
+    }
+
+}

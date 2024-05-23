@@ -1,11 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { BaseUserData, UpdateUserData } from '../../types/api/userTypes'
+// import { RootState } from './store';
+import { RootState } from '../store';
 
 
 export const userApi = createApi({
     reducerPath: "userApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include'
+    }),
     endpoints: (builder) => ({
+        getCSRF: builder.mutation<any, void>({
+            query: () => ({
+                url: 'api/users/csrf/',
+                method: 'GET',
+            })
+        }),
+
         registerUser: builder.mutation<any, BaseUserData>({
             query: (data: BaseUserData) => ({
                 url: 'api/users/user/',
@@ -40,7 +51,7 @@ export const userApi = createApi({
         updateUser: builder.mutation<any, UpdateUserData>({
             query: (data: UpdateUserData) => ({
                 url: 'api/users/user/',
-                method: "UPDATE",
+                method: "PATCH",
                 body: data
             })
         }),
@@ -52,8 +63,8 @@ export const userApi = createApi({
             })
         }),
 
-        getOtherUser: builder.query<any, {param: string, val: number | string}>({
-            query: ({param, val}) => ({
+        getOtherUser: builder.query<any, { param: string, val: number | string }>({
+            query: ({ param, val }) => ({
                 url: `api/users/user/?${param}=${val}}`,
                 method: "GET",
             })
@@ -70,4 +81,6 @@ export const {
     useUpdateUserMutation,
     useGetUserQuery,
     useGetOtherUserQuery,
+    useGetCSRFMutation,
+    useLazyGetUserQuery,
 } = userApi

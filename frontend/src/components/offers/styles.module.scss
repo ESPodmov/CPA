@@ -1,0 +1,47 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+
+
+.offers_controls_container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    gap: 24px;
+
+
+    .offers_types_container {
+        display: flex;
+        width: fit-content;
+        gap: 8px;
+
+        button {
+            &.offer_type {
+                background-color: $primary-light-color;
+                border-radius: 24px;
+                border: 1px solid $content-border-color;
+                font-size: 14px;
+                padding: 12px 16px;
+                color: $primary-color;
+                line-height: 16px;
+            }
+
+            &.active {
+                border: 1px solid $primary-controls-color;
+            }
+        }
+
+    }
+
+}
+
+.offers_vertical_container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .horizontal_container {
+        display: flex;
+        gap: 16px;
+    }
+}

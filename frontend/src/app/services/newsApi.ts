@@ -30,7 +30,7 @@ type UpdateNewsData = Partial<BaseNewsData>
 
 export const newsApi = createApi({
     reducerPath: "newsApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
         createNewsItem: builder.mutation<any, BaseNewsData>({
             query: (data: BaseNewsData) => ({
@@ -40,15 +40,15 @@ export const newsApi = createApi({
             })
         }),
 
-        getAllNews: builder.query<any, void>({
-            query: () => ({
-                url: 'api/news/',
+        getAllNews: builder.query<any, { page: number }>({
+            query: ({ page }) => ({
+                url: `api/news/?page=${page}`,
                 method: "GET"
             })
         }),
 
-        getShortNewsItem: builder.query<any, {pk: number | string}>({
-            query: ({pk}) => ({
+        getShortNewsItem: builder.query<any, { pk: number | string }>({
+            query: ({ pk }) => ({
                 url: `api/news/${pk}/`,
                 method: "GET"
             })
@@ -61,23 +61,23 @@ export const newsApi = createApi({
             })
         }),
 
-        updateNewsItem: builder.mutation<any, {data: UpdateNewsData, pk: number | string}>({
-            query: ({data, pk}) => ({
+        updateNewsItem: builder.mutation<any, { data: UpdateNewsData, pk: number | string }>({
+            query: ({ data, pk }) => ({
                 url: `api/news/${pk}/edit/`,
                 method: "PATCH",
                 body: data
             })
         }),
 
-        getFullNewsItem: builder.query<any, {pk: number | string}>({
-            query: ({pk}) => ({
+        getFullNewsItem: builder.query<any, { pk: number | string }>({
+            query: ({ pk }) => ({
                 url: `api/news/${pk}/edit/`,
                 method: 'GET',
             })
         }),
 
-        deleteNewsItem: builder.mutation<any, {pk: number | string}>({
-            query: ({pk}) => ({
+        deleteNewsItem: builder.mutation<any, { pk: number | string }>({
+            query: ({ pk }) => ({
                 url: `api/news/${pk}/delete/`,
                 method: 'DELETE',
             })
@@ -94,4 +94,5 @@ export const {
     useUpdateNewsItemMutation,
     useGetFullNewsItemQuery,
     useDeleteNewsItemMutation,
+    useLazyGetAllNewsQuery,
 } = newsApi

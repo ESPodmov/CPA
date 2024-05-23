@@ -69,10 +69,10 @@ class TargetActionSerializer(ModelSerializer):
 
 class OfferSerializer(ModelSerializer):
     category = PrimaryKeyRelatedField(queryset=OfferCategory.objects.all())
-    category_data = OfferCategorySerializer()
+    category_data = OfferCategorySerializer(read_only=True)
     medias = OfferMediaSerializer(many=True)
     target_action = PrimaryKeyRelatedField(queryset=TargetAction.objects.all())
-    target_action_data = TargetActionSerializer()
+    target_action_data = TargetActionSerializer(read_only=True)
     type = PrimaryKeyRelatedField(queryset=OfferType.objects.all())
     image = ImageField(required=False, max_length=None, use_url=True)
 
@@ -100,57 +100,15 @@ class OfferSerializer(ModelSerializer):
             "target_action_data",
         )
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['category_data'] = OfferCategorySerializer(instance.category).data
+        representation['target_action_data'] = TargetActionSerializer(instance.target_action).data
+        return representation
+
     def update(self, instance, validated_data):
         if 'image' in validated_data:
             old_image = instance.image
             old_image.delete()
         validated_data.pop('medias', None)
         return super().update(instance, validated_data)
-
-
-"""
-
-При обновлении с использованием вложенного сериализатора также будут созданы новые записи OfferMedia, если они включены в данные запроса. Это происходит потому, что при обновлении объекта Offer с помощью сериализатора, который включает в себя сериализатор для связанных объектов OfferMedia, Django REST Framework не будет определять, какие OfferMedia уже существуют и какие должны быть обновлены, а какие созданы.
-
-Для обновления связанных объектов вложенных моделей вам следует использовать Nested Serializers и переопределить метод update() в соответствующем сериализаторе. В этом методе вы сможете определить логику обновления связанных объектов на основе данных запроса.
-
-Вот пример, как это может выглядеть для вашего случая:
-
-python
-Copy code
-class OfferSerializer(serializers.ModelSerializer):
-    category = OfferCategorySerializer()
-    medias = OfferMediaSerializer(many=True)
-    target_action = TargetActionSerializer()
-
-    class Meta:
-        model = Offer
-        fields = (
-            "pk",
-            "name",
-            "category",
-            "reward_from",
-            "reward_to",
-            "medias",
-            "description",
-            "rules",
-            "target_action",
-            "source_url"
-        )
-        read_only_fields = (
-            "pk",
-        )
-
-    def update(self, instance, validated_data):
-        # Обновляем основные поля Offer
-        instance.name = validated_data.get('name', instance.name)
-        # Далее обновляем связанные объекты OfferMedia
-        medias_data = validated_data.pop('medias', None)
-        if medias_data:
-            # Удаляем существующие связанные объекты OfferMedia
-            instance.medias.clear()
-            # Создаем новые связанные объекты OfferMedia
-            for media_data in medias_data:
-                instance.medias.create(**media_data)
-        return instance
-"""

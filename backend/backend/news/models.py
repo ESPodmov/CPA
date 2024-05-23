@@ -42,9 +42,13 @@ class News(models.Model):
         verbose_name_plural = "News"
 
     title = models.CharField(max_length=256, blank=False, null=False)
+    short = models.TextField(blank=True, null=False)
     body = models.TextField(blank=False, null=False)
     creator = models.ForeignKey(BaseUser, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False, null=False, blank=False)
     # medias = models.ManyToManyField(Media, related_name="news")
+
+    def __str__(self):
+        return self.title

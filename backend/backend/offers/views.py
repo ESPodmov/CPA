@@ -1,4 +1,4 @@
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.decorators import api_view
 from rest_framework.generics import DestroyAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView, \
     RetrieveUpdateDestroyAPIView, CreateAPIView, GenericAPIView
@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from stats.models import Click
 from authorization.models import User
 from django.shortcuts import redirect
+from authorization.permissions import IsAuthorized
 
 
 class PartnerBaseView(GenericAPIView):
@@ -30,73 +31,70 @@ class PartnerListView(ListAPIView, PartnerBaseView):
 
 
 class PartnerView(RetrieveAPIView, PartnerBaseView):
-    pass
+    permission_classes = [IsAuthorized]
 
 
 class OfferTypeBaseView(GenericAPIView):
     queryset = OfferType.objects.all()
     serializer_class = OfferTypeSerializer
-    permission_classes = [IsAdmin]
 
 
 class OfferTypeListView(ListAPIView, OfferTypeBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferTypeView(RetrieveAPIView, OfferTypeBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferTypeEditView(UpdateAPIView, DestroyAPIView, OfferTypeBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferTypeCreateView(CreateAPIView, OfferTypeBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class TargetActionBaseView(GenericAPIView):
     queryset = TargetAction.objects.all()
     serializer_class = TargetActionSerializer
-    permission_classes = [IsAdmin]
 
 
 class TargetActionListView(ListAPIView, TargetActionBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class TargetActionView(RetrieveAPIView, TargetActionBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class TargetActionEditView(UpdateAPIView, DestroyAPIView, TargetActionBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class TargetActionCreateView(CreateAPIView, TargetActionBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferCategoryBaseView(GenericAPIView):
     queryset = OfferCategory.objects.all()
     serializer_class = OfferCategorySerializer
-    permission_classes = [IsAdmin]
 
 
 class OfferCategoryListView(ListAPIView, OfferCategoryBaseView):
-    permission_classes = []
+    permission_classes = [IsAuthorized]
 
 
 class OfferCategoryView(RetrieveAPIView, OfferCategoryBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferCategoryEditView(UpdateAPIView, DestroyAPIView, OfferCategoryBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferCategoryCreateView(CreateAPIView, OfferCategoryBaseView):
-    pass
+    permission_classes = [IsAdmin]
 
 
 class OfferMediaBaseView(GenericAPIView):
@@ -105,6 +103,7 @@ class OfferMediaBaseView(GenericAPIView):
 
 
 class OfferMediaListView(ListAPIView, OfferMediaBaseView):
+    permission_classes = [IsAuthorized]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(OfferMedia.objects.filter(offer__pk=request.query_params.get("offer")))
@@ -136,9 +135,11 @@ class OfferBaseView(GenericAPIView):
     serializer_class = OfferSerializer
 
 
-class OfferListView(ListAPIView, OfferTypeBaseView):
+class OfferListView(ListAPIView, OfferBaseView):
+    permission_classes = [IsAuthorized]
+
     def list(self, request, *args, **kwargs):
-        offers_category = request.GET.get("category", None)
+        offers_category = int(request.GET.get("category", None))
         queryset = Offer.objects.filter(category__pk=offers_category) if offers_category else self.get_queryset()
 
         queryset = self.filter_queryset(queryset)
@@ -152,15 +153,15 @@ class OfferListView(ListAPIView, OfferTypeBaseView):
         return Response(serializer.data)
 
 
-class OfferView(RetrieveAPIView, OfferTypeBaseView):
-    pass
+class OfferView(RetrieveAPIView, OfferBaseView):
+    permission_classes = [IsAuthorized]
 
 
-class OfferEditView(UpdateAPIView, DestroyAPIView, OfferTypeBaseView):
+class OfferEditView(UpdateAPIView, DestroyAPIView, OfferBaseView):
     permission_classes = [IsAdmin]
 
 
-class OfferCreateView(CreateAPIView, OfferTypeBaseView):
+class OfferCreateView(CreateAPIView, OfferBaseView):
     permission_classes = [IsAdmin]
 
 

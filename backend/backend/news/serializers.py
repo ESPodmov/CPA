@@ -7,9 +7,15 @@ class NewsShortSerializer(ModelSerializer):
     class Meta:
         model = News
         fields = (
+            "pk",
             'title',
             'body',
             'created_at',
+            'short',
+        )
+
+        read_only_fields = (
+            "pk",
         )
 
 

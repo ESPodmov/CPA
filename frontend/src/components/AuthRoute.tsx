@@ -6,6 +6,7 @@ import { Navigate, useLocation, Outlet } from "react-router-dom";
 
 const AuthRoute: React.FC = () => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated)
+
     const location = useLocation();
 
     return isAuthenticated ? (

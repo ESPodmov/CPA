@@ -1,0 +1,44 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+
+
+.news_content_container {
+    padding: $content-container-padding;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    gap: 24px;
+    border: $content-container-border;
+    background-color: $primary-light-color;
+
+    .news_list_container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .news_item_controls_container {
+        display: flex;
+        $news-controls-color: #EC5C57;
+        text-decoration: none;
+        color: $news-controls-color;
+        gap: 16px;
+        align-items: center;
+        cursor: pointer;
+
+        .news_icon {
+            width: 24px;
+            height: 24px;
+            fill: $news-controls-color;
+            transform: rotate(-180deg);
+        }
+    }
+
+    .news_item_data_container {
+        display: flex;
+        flex-direction: column;
+        padding-right: 32px;
+    }
+
+}

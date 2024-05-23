@@ -4,10 +4,11 @@ import LoginSection from "../components/loginSection/LoginSection";
 
 
 const Login: React.FC = () => {
+    document.body.style.backgroundColor = 'white';
     return (
         <>
             <Header isLoginPage={true} />
-            <LoginSection isLogin={true}/>
+            <LoginSection isLogin={true} />
         </>
     )
 }

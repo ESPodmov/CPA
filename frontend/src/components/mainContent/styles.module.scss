@@ -1,0 +1,17 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+.main_content__container {
+    position: absolute;
+    left: 276px;
+    top: 96px;
+    background-color: $main-content-page-color;
+    border-radius: 24px 0 0 0;
+    width: calc(100% - 276px);
+    height: fit-content;
+    min-height: calc(100% - 96px);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}

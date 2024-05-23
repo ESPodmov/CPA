@@ -4,25 +4,25 @@ import { BaseOfferData, UpdateOfferData } from '../../../types/api/offerTypes'
 
 export const offerApi = createApi({
     reducerPath: "offerApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
-        updateOffer: builder.mutation<any, {data: UpdateOfferData, pk: string | number}>({
-            query: ({data, pk}) => ({
+        updateOffer: builder.mutation<any, { data: UpdateOfferData, pk: string | number }>({
+            query: ({ data, pk }) => ({
                 url: `api/offers/${pk}/edit/`,
                 method: "PATCH",
                 body: data
             })
         }),
 
-        deleteOffer: builder.mutation<any, {pk: string | number}>({
-            query: ({pk}) => ({
+        deleteOffer: builder.mutation<any, { pk: string | number }>({
+            query: ({ pk }) => ({
                 url: `api/offers/${pk}/edit/`,
                 method: "DELETE",
             })
         }),
 
-        getOffer: builder.query<any, {pk: string | number}>({
-            query: ({pk}) => ({
+        getOffer: builder.query<any, { pk: string | number }>({
+            query: ({ pk }) => ({
                 url: `api/offers/${pk}/`,
                 method: "GET"
             })
@@ -36,9 +36,9 @@ export const offerApi = createApi({
             })
         }),
 
-        getAllOffers: builder.query<any, void>({
-            query: () => ({
-                url: 'api/offers/all/',
+        getAllOffers: builder.query<any, { category_pk: number | string }>({
+            query: ({ category_pk }) => ({
+                url: `api/offers/all/?category=${category_pk}`,
                 method: "GET",
             })
         }),
@@ -52,4 +52,5 @@ export const {
     useGetAllOffersQuery,
     useGetOfferQuery,
     useUpdateOfferMutation,
+    useLazyGetAllOffersQuery,
 } = offerApi

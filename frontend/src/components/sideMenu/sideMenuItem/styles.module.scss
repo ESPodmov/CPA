@@ -1,0 +1,21 @@
+@import "../../../styles/styles.scss";
+@import "../../../styles/typografy.scss";
+
+.side_menu__item_container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    width: fit-content;
+
+    .side_menu__item{
+        text-decoration: none;
+        color: $primary-light-color;
+    }
+
+    .side_menu__icon_container {
+        width: 20px;
+        height: 20px;
+        fill: $primary-light-color;
+    }
+}

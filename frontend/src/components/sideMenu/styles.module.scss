@@ -1,0 +1,12 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+
+.side_menu_container {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin-top: 54px;
+    margin-left: 40px;
+    gap: 32px;
+}

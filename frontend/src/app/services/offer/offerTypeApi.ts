@@ -4,7 +4,7 @@ import { BaseOfferTypeData, UpdateOfferTypeData } from '../../../types/api/offer
 
 export const offerTypeApi = createApi({
     reducerPath: "offerTypeApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
         updateOfferType: builder.mutation<any, { data: UpdateOfferTypeData, pk: string | number }>({
             query: ({ data, pk }) => ({

@@ -3,3 +3,7 @@ export type BaseTargetActionData = {
 }
 
 export type UpdateTargetActionData = Partial<BaseTargetActionData>
+
+export type FullTargetActionData = BaseTargetActionData & {
+    pk: string | number;
+}

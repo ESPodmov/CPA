@@ -1,0 +1,65 @@
+@import "../../styles/styles.scss";
+@import "../../styles/typografy.scss";
+
+.profile_menu_container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: flex-end;
+    z-index: 1;
+
+    .triangle {
+        position: relative;
+        width: 0;
+        height: 0;
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        border-bottom: 12px solid $primary-light-color;
+        transform: translateX(-50%);
+    }
+
+    .profile_menu {
+        $profile_gap: 16px;
+        $profile_padding: 16px;
+        width: 210px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        background-color: $primary-light-color;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+        color: $primary-color;
+
+
+        .profile_menu__header_container {
+            padding: $profile_padding;
+            border-bottom: 1px solid #F5F7F9;
+
+            .profile_menu__header {
+                display: block;
+                font-weight: 500;
+                font-size: 18px;
+                line-height: 21px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+
+        .profile_menu__controls_container {
+            padding: $profile_padding;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: $profile_gap;
+
+            .profile_menu__item {
+                text-decoration: none;
+                color: $primary-color
+            }
+
+            .profile_menu__alert {
+                color: $primary-controls-color;
+                cursor: pointer;
+            }
+        }
+    }
+}

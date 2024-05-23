@@ -1,6 +1,11 @@
 $primary-controls-color: #FF4E50;
 $primary-controls-dark-color: #f24e51;
 $secondary-controls-color: #E1E2E4;
+$main-content-page-color: #F6F7F8;
+
+$content-border-color: #D8D8D8;
+$content-container-border: 1px solid $content-border-color;
+$content-container-padding: 32px 24px;
 
 $primary-color: #292929;
 $primary-light-color: #FFFFFF;
@@ -26,9 +31,10 @@ button {
   line-height: 24px;
   font-size: $base-font-size;
   font-weight: 500;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.30px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  width: fit-content;
 
   &:hover {
     background-color: $primary-controls-dark-color;

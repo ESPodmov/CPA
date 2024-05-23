@@ -4,9 +4,14 @@ import { createSlice } from '@reduxjs/toolkit';
 interface UserState {
     user: {
         pk: number;
-        username: string;
         email: string;
-        phone: string
+        phone?: string;
+        fio?: string;
+        name?: string;
+        link?: string;
+        tgUsername?: string;
+        balance: number;
+        activity: string;
     } | null;
 }
 
@@ -27,6 +32,6 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 
 export default userSlice.reducer;

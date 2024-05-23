@@ -4,7 +4,7 @@ import { BaseTargetActionData, UpdateTargetActionData } from '../../../types/api
 
 export const targetActionApi = createApi({
     reducerPath: "targetActionApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
         updateTargetAction: builder.mutation<any, { data: UpdateTargetActionData, pk: string | number }>({
             query: ({ data, pk }) => ({

@@ -1,14 +1,10 @@
 from rest_framework import permissions
-from .utils import get_user, get_user_type, UserType
-
-from .utils import get_user_type_short
 
 
 def is_admin_or_manager(request):
-    if not request.user:
+    if not request.user or not request.user.is_authenticated:
         return False
-    user_type = get_user_type_short(request.user.username)
-    return user_type and (user_type == UserType.manager or user_type == UserType.admin)
+    return request.user.is_admin or request.user.is_staff or request.user.is_superuser
 
 
 class IsAdminOrManager(permissions.BasePermission):
@@ -18,15 +14,13 @@ class IsAdminOrManager(permissions.BasePermission):
 
 class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
-        if not request.user:
+        if not request.user or not request.user.is_authenticated:
             return False
-        user_type = get_user_type(get_user(username=request.user.username))
-        return user_type and user_type == UserType.admin
+        return request.user.is_superuser or request.user.is_admin
 
 
 class IsAuthorized(permissions.BasePermission):
     def has_permission(self, request, view):
         if not request.user:
             return False
-        user_type = get_user_type(get_user(username=request.user.username))
-        return user_type is not None
+        return request.user.is_authenticated

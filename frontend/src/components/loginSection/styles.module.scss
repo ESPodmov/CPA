@@ -92,6 +92,14 @@
                     background-color: linear-gradient(180deg, #FFFFFF 0%, $input-background-color 100%);
                 }
 
+                &:not(:placeholder-shown)+.placeholder {
+                    transform: translateY(-50%);
+                    top: 0;
+                    left: 20px;
+                    font-size: 12px;
+                    background-color: linear-gradient(180deg, #FFFFFF 0%, $input-background-color 100%);
+                }
+
             }
 
             .placeholder {

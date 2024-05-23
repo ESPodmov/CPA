@@ -10,6 +10,13 @@
     height: 88px;
     min-width: $full-size;
 
+    &.main_page {
+        min-width: none;
+        width: 100%;
+        padding: 16px 40px 16px 42px;
+        height: fit-content;
+    }
+
     .link {
         text-decoration: none;
         color: inherit;
@@ -19,19 +26,50 @@
         font-size: 24px;
         line-height: 29.26px;
         font-weight: 600;
-
-        .dark {
-            color: $primary-color;
-        }
-
-        .light {
-            color: $primary-light-color
-        }
-
     }
+
+    .dark {
+        color: $primary-color;
+    }
+
+    .light {
+        color: $primary-light-color;
+    }
+
 
     button {
         font-size: 14px;
+    }
+
+    .controls_container {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+
+        .item {
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .profile {
+            cursor: pointer;
+
+            &.item {
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                background-color: $primary-controls-color;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 24px;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            }
+        }
+
     }
 
 }

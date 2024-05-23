@@ -1,16 +1,17 @@
 from rest_framework import serializers
-from .models import BaseUser, User, Admin, Manager
+from .models import BaseUser, User
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
+    pk = serializers.IntegerField(required=False)
     phone = serializers.CharField(required=False)
 
     class Meta:
         model = BaseUser
         fields = (
             "pk",
-            "username",
             "email",
+            "phone",
         )
         read_only_fields = (
             "pk",
@@ -27,27 +28,31 @@ class UserSerializer(BaseUserSerializer):
     fio = serializers.CharField(required=False)
     tg_username = serializers.CharField(required=False)
     name = serializers.CharField(required=False)
+    link = serializers.URLField(required=False)
+    activity = serializers.CharField(required=False)
 
     class Meta:
-        model = BaseUser
+        model = User
         fields = BaseUserSerializer.Meta.fields + (
             "balance",
             "fio",
             "tg_username",
             "name",
+            "link",
+            "activity"
         )
         read_only_fields = (
             "balance",
         )
 
 
-class AdminSerializer(BaseUserSerializer):
-    class Meta:
-        model = Admin
-        fields = BaseUserSerializer.Meta.fields
-
-
-class ManagerSerializer(BaseUserSerializer):
-    class Meta:
-        model = Manager
-        fields = BaseUserSerializer.Meta.fields
+# class AdminSerializer(BaseUserSerializer):
+#     class Meta:
+#         model = Admin
+#         fields = BaseUserSerializer.Meta.fields
+#
+#
+# class ManagerSerializer(BaseUserSerializer):
+#     class Meta:
+#         model = Manager
+#         fields = BaseUserSerializer.Meta.fields

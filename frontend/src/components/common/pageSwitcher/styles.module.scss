@@ -1,0 +1,44 @@
+@import "../../../styles/styles.scss";
+@import "../../../styles/typografy.scss";
+
+
+.page_switcher_container {
+    display: flex;
+    gap: 8px;
+
+    button {
+        width: 24px;
+        height: 24px;
+        background-color: transparent;
+        border-radius: 4px;
+        padding: 0;
+        color: $primary-color;
+        font-weight: 400;
+        line-height: 19px;
+        transition: all 0.3s ease-in-out;
+
+        .arrow {
+            fill: #757575;
+
+            &.left {
+                transform: rotate(-180deg);
+            }
+        }
+
+        &.active {
+            background-color: $secondary-controls-color;
+        }
+    }
+
+    .pages_container {
+        display: flex;
+        color: $primary-color;
+
+        button {
+            &:hover {
+                border: 1px solid $secondary-controls-color;
+            }
+        }
+    }
+
+}

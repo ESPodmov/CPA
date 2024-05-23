@@ -4,25 +4,25 @@ import { BaseOfferCategoryData, UpdateOfferCategoryData } from '../../../types/a
 
 export const offerCategoryApi = createApi({
     reducerPath: "offerCategoryApi",
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_API_BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
-        updateOfferCategory: builder.mutation<any, {data: UpdateOfferCategoryData, pk: string | number}>({
-            query: ({data, pk}) => ({
+        updateOfferCategory: builder.mutation<any, { data: UpdateOfferCategoryData, pk: string | number }>({
+            query: ({ data, pk }) => ({
                 url: `api/offers/categories/${pk}/edit/`,
                 method: "PATCH",
                 body: data
             })
         }),
 
-        deleteOfferCategory: builder.mutation<any, {pk: string | number}>({
-            query: ({pk}) => ({
+        deleteOfferCategory: builder.mutation<any, { pk: string | number }>({
+            query: ({ pk }) => ({
                 url: `api/offers/categories/${pk}/edit/`,
                 method: "DELETE",
             })
         }),
 
-        getOfferCategory: builder.query<any, {pk: string | number}>({
-            query: ({pk}) => ({
+        getOfferCategory: builder.query<any, { pk: string | number }>({
+            query: ({ pk }) => ({
                 url: `api/offers/categories/${pk}/`,
                 method: "GET"
             })
