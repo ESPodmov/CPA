@@ -1,5 +1,8 @@
 import React from 'react';
 import classes from './styles.module.scss'
+import { useNavigate } from 'react-router-dom';
+import { routes } from '../../../routes/Routes';
+import { addSpaces, formatReward } from '../../../utils/utils';
 
 interface OfferCardProps {
     pk: string | number;
@@ -12,29 +15,13 @@ interface OfferCardProps {
 }
 
 const OfferCard: React.FC<OfferCardProps> = ({ pk, name, reward_from, reward_to, image, target_action, dummy }) => {
+    const navigate = useNavigate();
 
-    const addSpaces = (num: string | number) => {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    };
 
-    const formatReward = () => {
-        const rew_from = reward_from ? reward_from : null;
-        const rew_to = reward_to ? reward_to : null;
 
-        if (rew_from !== null && rew_to !== null) {
-            if (rew_from === rew_to) {
-                return `${addSpaces(rew_from)} ₽`;
-            } else {
-                return `${addSpaces(rew_from)} - ${addSpaces(rew_to)} ₽`;
-            }
-        } else if (rew_from !== null) {
-            return `от ${addSpaces(rew_from)} ₽`;
-        } else if (rew_to !== null) {
-            return `до ${addSpaces(rew_to)} ₽`;
-        } else {
-            return 'Не указано';
-        }
-    };
+    const handleAboutBtnClick = () => {
+        navigate(routes.offer.path.replace(":pk", String(pk)))
+    }
 
     return dummy ?
         (
@@ -51,7 +38,7 @@ const OfferCard: React.FC<OfferCardProps> = ({ pk, name, reward_from, reward_to,
                         </h1>
                         <div className={classes.datas_container}>
                             <div className={classes.info}>
-                                Вознаграждение: <span>{formatReward()}</span>
+                                Вознаграждение: <span>{formatReward(reward_from, reward_to)}</span>
                             </div>
                             <div className={classes.info}>
                                 Целевое действие: <span>{target_action}</span>
@@ -59,10 +46,10 @@ const OfferCard: React.FC<OfferCardProps> = ({ pk, name, reward_from, reward_to,
                         </div>
                     </div>
                     <div className={classes.controls_container}>
-                        <button className={`${classes.secondary}`}>
+                        <button className={`${classes.secondary}`} onClick={handleAboutBtnClick}>
                             Подробнее
                         </button>
-                        <button>
+                        <button onClick={handleAboutBtnClick}>
                             Подключить
                         </button>
                     </div>

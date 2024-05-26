@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../routes/Routes";
+import CheckBox from "../common/checkBox/CheckBox";
 
 type LoginSectionProps = {
     isLogin: boolean;
@@ -144,15 +145,12 @@ const LoginSection: React.FC<LoginSectionProps> = ({ isLogin }) => {
                     </div>
                     {
                         tabs.register &&
-                        <div className={classes.checkbox_container}>
-                            <div className={classes.checkbox}>
-                                <input id="agreement" type="checkbox" name="agreement" />
-                                <span className={classes.checkmark} />
-                            </div>
+                        <CheckBox caption={
                             <div className={classes.info}>
                                 Я соглашаюсь с правилами Партнерской программы, ознакомлен с Политикой в отношении обработки персональных данных.
                             </div>
-                        </div>
+                        }
+                        />
                     }
                     <div className={classes.btn_container}>
                         <button type="submit" className={classes.big_btn}>{getActiveTabBtnName()}</button>
@@ -160,9 +158,9 @@ const LoginSection: React.FC<LoginSectionProps> = ({ isLogin }) => {
                     <div className={classes.tooltip_container}>
                         <span>
                             Для восстановления пароля напишите в поддержку:
-                            <a>
-                                CPAPartnersTron@yandex.ru
-                            </a>
+                        </span>
+                        <span className={classes.mail}>
+                            CPAPartnersTron@yandex.ru
                         </span>
                     </div>
                 </form>

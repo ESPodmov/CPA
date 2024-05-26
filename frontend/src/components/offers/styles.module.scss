@@ -14,6 +14,7 @@
         display: flex;
         width: fit-content;
         gap: 8px;
+        white-space: nowrap;
 
         button {
             &.offer_type {

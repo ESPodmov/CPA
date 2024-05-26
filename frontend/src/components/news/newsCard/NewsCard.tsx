@@ -23,7 +23,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ date, title, short, isLast, pk, isL
     const Container = isLink ? Link : 'div'
 
     return (
-        <Container to={`${routes.news.path}/${pk}`} className={`${classes.news_card_container} ${isLast ? classes.last : ""} ${!isLink ? classes.item : ""}`}>
+        <Container to={routes.news_item.path.replace(":pk", String(pk))} className={`${classes.news_card_container} ${isLast ? classes.last : ""} ${!isLink ? classes.item : ""}`}>
             <div className={classes.news_crad__text_container}>
                 <span className={classes.news_card__text_secondary}>
                     {formattedDate}
