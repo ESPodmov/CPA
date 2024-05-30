@@ -1,5 +1,12 @@
 @import "../../styles/styles.scss";
 @import "../../styles/typografy.scss";
+@import "../../styles/input.scss";
+
+input {
+    &:disabled {
+        background-color: transparent;
+    }
+}
 
 
 .offer_ver_container {
@@ -8,6 +15,8 @@
     flex-direction: column;
     width: 100%;
 
+    $main-padding: 24px;
+
     .offer_section_container {
         background-color: $primary-light-color;
         border-radius: 8px;
@@ -15,15 +24,27 @@
         flex-direction: column;
         width: 100%;
         min-width: fit-content;
-        padding: 24px;
+        padding: $main-padding;
+        border: $content-container-border;
+        overflow: hidden;
+        transition: all 0.5s ease-in-out;
+
+        &.resize {
+            padding: 0;
+        }
+
+        &.first {
+            min-width: 562px;
+        }
 
         &.main {
             flex-direction: row;
             justify-content: space-between;
             padding: 0;
+            align-items: center;
 
             .img_container {
-                height: 100%;
+                height: 50%;
                 min-height: 300px;
                 width: 260px;
                 overflow: hidden;
@@ -40,28 +61,36 @@
             display: flex;
             flex-direction: column;
             gap: 24px;
-            min-width: 300px;
+            width: 300px;
             padding: 24px 0 32px 24px;
         }
 
         &.pay {
             gap: 24px;
+            padding: 0
         }
 
         .pay_info_container {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            color: #757575;
+            gap: 24px;
+            padding: $main-padding;
 
-            span {
-                &::after {
-                    content: " ";
-                }
+            .pay_info_data_container {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                color: #757575;
 
-                .main {
-                    font-weight: bold;
-                    color: $primary-color;
+                span {
+                    &::after {
+                        content: " ";
+                    }
+
+                    .main {
+                        font-weight: bold;
+                        color: $primary-color;
+                    }
                 }
             }
         }
@@ -72,6 +101,7 @@
             line-height: 24px;
             font-weight: 500;
             letter-spacing: 0.2px;
+            width: fit-content;
         }
 
         .checkmark_caption {
@@ -88,6 +118,137 @@
             .section_link {
                 color: $primary-controls-color;
             }
+        }
+
+        &.resize {
+            padding: 0;
+        }
+
+        &.open {
+            padding-bottom: $main-padding;
+
+            .content_resize {
+                .arrow_container {
+                    transform: rotate(270deg);
+                }
+            }
+
+        }
+
+        &.opened {
+            height: fit-content;
+
+            .info_container {
+                padding: $main-padding $main-padding 32px $main-padding;
+                height: fit-content;
+
+                &.link {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+
+                    .link_caption {
+                        span {
+                            &::after {
+                                content: " ";
+                            }
+                        }
+
+                        .section_link {
+                            color: $primary-controls-color;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                &.attached_files {
+                    display: flex;
+                    flex-direction: column;
+                    padding-bottom: $main-padding;
+                    gap: 24px;
+
+
+                    .item {
+                        padding-bottom: 24px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        border-bottom: 1px solid $content-border-color;
+                        cursor: pointer;
+                        text-decoration: none;
+                        color: $primary-color;
+
+                        .info_container {
+                            display: flex;
+                            flex-direction: row;
+                            gap: 16px;
+                            padding: 0;
+                            align-items: center;
+
+
+                            .logo_container {
+                                width: 50px;
+                                height: 50px;
+                                border-radius: 8px;
+                                border: 1px solid $content-border-color;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+
+                            }
+
+
+                        }
+
+                        .logo {
+                            fill: #979797;
+                        }
+
+                    }
+                }
+            }
+
+            .content_resize {
+                background-color: #F5F7F9;
+            }
+        }
+
+        .content_resize {
+            display: flex;
+            justify-content: space-between;
+            padding: $main-padding;
+            cursor: pointer;
+
+            .arrow_container {
+                transform: rotate(90deg);
+                fill: #9FA0A7;
+                transition: all 0.5s ease-in-out;
+            }
+        }
+
+        .info_container {
+            display: flex;
+            flex-direction: column;
+            padding: 0 $main-padding 0 $main-padding;
+            box-sizing: border-box;
+            transition: all 0.5s ease-in-out;
+
+            &.hor_container {
+                flex-direction: row;
+                gap: 32px;
+
+                span {
+
+                    width: 0;
+                    height: fit-content;
+
+                    &.visible {
+                        width: 100%;
+                    }
+                }
+            }
+
         }
 
     }

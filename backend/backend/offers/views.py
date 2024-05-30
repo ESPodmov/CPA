@@ -166,10 +166,12 @@ class OfferCreateView(CreateAPIView, OfferBaseView):
 
 
 @api_view(["GET"])
-def redirect_view(request):
+def redirect_view(request, pk):
     partner = request.GET.get('partner', None)
+    print(partner)
     if partner:
-        offer = Offer.objects.get(request.query_params.get('pk'))
+        print(request.query_params.get("pk"))
+        offer = Offer.objects.get(pk=pk)
         user = User.objects.get(pk=int(partner))
         if not offer or not user:
             return Response({'error': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -182,6 +184,6 @@ def redirect_view(request):
         if not user_ip:
             user_ip = "0.0.0.0"
 
-        click = Click.objects.create(offer=offer, source=user, ip_address=user_ip)
+        click = Click.objects.create(offer=offer, user=user, ip_address=user_ip)
         return redirect(
-            f"{offer.source_url}?utm_source=tronius&utm_medium={offer.type}?utm_campaign={user.pk}&utm_content={click.pk}")
+            f"{offer.source_url}?utm_source=tronius&utm_medium={offer.type}&utm_campaign={user.pk}&utm_content={click.pk}")

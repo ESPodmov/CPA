@@ -13,6 +13,7 @@ import NewsPage from './pages/NewsPage';
 import NewsItemPage from './pages/NewsItemPage';
 import OffersPage from './pages/OffersPage';
 import OfferPage from './pages/OfferPage';
+import ReportsPage from './pages/ReportsPage';
 
 const App: React.FC = () => {
   const dispatch = useDispatch()
@@ -38,8 +39,9 @@ const App: React.FC = () => {
   ) : (
     <Router>
       <Routes>
-        <Route path={routes.register.path} element={<Login />} />
-        <Route path={routes.login.path} element={<Login />} />
+        <Route path={routes.register.path} element={<Login isLogin={false} />} />
+        <Route path={routes.login.path} element={<Login isLogin={true} />} />
+        <Route path={routes.reports.path} element={<ReportsPage />} />
         <Route element={<AuthRoute />}>
           <Route path={routes.profile.path} element={<Profile />} />
           <Route element={<ValidDataRoute />}>

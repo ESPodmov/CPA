@@ -9,10 +9,12 @@ class Click(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="clicks")
 
+    def __str__(self):
+        return f"Переход|{self.user}|{self.ip_address}"
+
 
 class Conversion(models.Model):
     click = models.ForeignKey(Click, on_delete=models.SET_NULL, null=True, blank=False, related_name='conversions')
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE, null=False, blank=False, related_name="conversions")
     date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name="conversions")
-
