@@ -1,6 +1,6 @@
-input {
+@import './styles.scss';
 
-    $input-background-color: #F5F7F9;
+input {
 
 
     width: 100%;
@@ -43,11 +43,11 @@ input {
 
     $input-disabled-color: #E1E2E4;
 
-    &:disabled + &:not(:placeholder-shown) {
+    &:disabled+&:not(:placeholder-shown) {
         background-color: $input-disabled-color;
     }
 
-    &:disabled+ &:not(:placeholder-shown) +.placeholder {
+    &:disabled+&:not(:placeholder-shown)+.placeholder {
         background: linear-gradient(180deg, $primary-light-color 0%, $input-disabled-color 100%);
     }
 

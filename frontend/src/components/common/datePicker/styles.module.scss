@@ -1,0 +1,25 @@
+@import '../../../styles/typografy.scss';
+@import '../../../styles/styles.scss';
+
+
+.picker_container {
+    padding: 16px;
+    background: $input-background-color;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 340px;
+    border: 1px solid $content-border-color;
+    border-radius: 4px;
+
+    input {
+        border: none;
+        padding: 0;
+        height: fit-content;
+    }
+    
+    .icon {
+        fill: $primary-color;
+    }
+}

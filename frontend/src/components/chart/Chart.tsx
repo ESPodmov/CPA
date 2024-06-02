@@ -28,8 +28,8 @@ const commonSeriesOptions = {
 
 
 interface ChartProps {
-    dateFrom: string,
-    dateTo: string,
+    dateFrom: Date,
+    dateTo: Date,
 }
 
 const Chart: React.FC<ChartProps> = ({ dateFrom, dateTo }) => {
@@ -38,9 +38,11 @@ const Chart: React.FC<ChartProps> = ({ dateFrom, dateTo }) => {
     console.log(dateFrom, dateTo)
 
 
-    const generateDateList = (dateFrom: string, dateTo: string) => {
-        const start = new Date(dateFrom.split('.').reverse().join('-'));
-        const end = new Date(dateTo.split('.').reverse().join('-'));
+    const generateDateList = (dateFrom: Date, dateTo: Date) => {
+        // const start = new Date(dateFrom.split('.').reverse().join('-'));
+        const start = dateFrom
+        // const end = new Date(dateTo.split('.').reverse().join('-'));
+        const end = dateTo
         const dates = [];
 
         let currentDate = start;

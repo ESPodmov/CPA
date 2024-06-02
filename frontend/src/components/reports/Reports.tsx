@@ -1,18 +1,19 @@
 import React, { ChangeEvent, useState } from 'react'
 import Chart from '../chart/Chart'
 import classes from './styles.module.scss'
+import DatePicker from '../common/datePicker/DatePicker'
 
 
 const Reports: React.FC = () => {
     const currDate = new Date()
     const basePrevDate = new Date(currDate)
     basePrevDate.setDate(currDate.getDate() - 7)
-    const [dateFrom, setDateFrom] = useState<string>(`${basePrevDate.getDay().toString().padStart(2, '0')}.${basePrevDate.getMonth().toString().padStart(2, '0')}.${basePrevDate.getFullYear()}`)
-    const [dateTo, setDateTo] = useState(`${currDate.getDay()}.${currDate.getMonth()}.${currDate.getFullYear()}`)
-    console.log(dateFrom)
+    const [dateFrom, setDateFrom] = useState<Date>(basePrevDate)
+    const [dateTo, setDateTo] = useState<Date>(currDate)
 
-    const handleChangeDateFrom = (event: ChangeEvent<HTMLInputElement>) => {
-        setDateFrom(event.target.value)
+    const handleChangeDateFrom = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const date = new Date(event.target.value)
+        setDateFrom(date)
     }
 
     const formatDate = (date: string) => {
@@ -25,7 +26,7 @@ const Reports: React.FC = () => {
             <h1 className={classes.content_header}>
                 Отчеты
             </h1>
-            <input placeholder='dd.mm.yyyy' defaultValue={dateFrom} type='date' onChange={handleChangeDateFrom} onBlur={() => setDateFrom(formatDate(dateFrom))} />
+            <DatePicker date={dateFrom} format='dd.MM.yyyy' name='dateFrom'/>
             <Chart dateFrom={dateFrom} dateTo={dateTo} />
         </>
     )
