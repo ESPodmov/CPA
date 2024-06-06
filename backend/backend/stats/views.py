@@ -15,7 +15,7 @@ from payouts.models import Payout
 from .mixins import StatsFilteringMixin
 
 
-class ClickListView(ListAPIView, StatsFilteringMixin):
+class ClickListView(StatsFilteringMixin, ListAPIView):
     queryset = Click.objects.all()
     serializer_class = ClickSerializer
     permission_classes = [IsAuthorized]
@@ -27,7 +27,7 @@ class ConversionBaseView(GenericAPIView):
     serializer_class = ConversionSerializer
 
 
-class ConversionListView(ListAPIView, ConversionBaseView, StatsFilteringMixin):
+class ConversionListView(StatsFilteringMixin, ConversionBaseView, ListAPIView):
     cur_model = Conversion
     permission_classes = [IsAuthorized]
 

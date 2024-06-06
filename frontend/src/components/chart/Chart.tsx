@@ -5,6 +5,7 @@ import { TitleComponent, ToolboxComponent, TooltipComponent, GridComponent, Lege
 import { LineChart } from 'echarts/charts';
 import { UniversalTransition } from 'echarts/features';
 import { SVGRenderer } from 'echarts/renderers';
+import { ChartData } from '../reports/Reports';
 
 // Register the necessary components
 echarts.use(
@@ -30,30 +31,37 @@ const commonSeriesOptions = {
 interface ChartProps {
     dateFrom: Date,
     dateTo: Date,
+    data?: ChartData[],
 }
 
-const Chart: React.FC<ChartProps> = ({ dateFrom, dateTo }) => {
+const Chart: React.FC<ChartProps> = ({ dateFrom, dateTo, data }) => {
     const chartRef = useRef<HTMLDivElement | null>(null);
-    const [seriesData, setSeriesData] = useState<any[]>([]);
-    console.log(dateFrom, dateTo)
+    const [seriesData, setSeriesData] = useState<any[]>(data ? data : []);
+
+    useEffect(() => {
+        if (data) {
+            const newData: ChartData[] = []
+            data.map((elem, index) => {
+                newData.push({ ...commonSeriesOptions, ...elem })
+            })
+            setSeriesData(newData)
+        }
+    }, [data])
 
 
     const generateDateList = (dateFrom: Date, dateTo: Date) => {
-        // const start = new Date(dateFrom.split('.').reverse().join('-'));
         const start = dateFrom
-        // const end = new Date(dateTo.split('.').reverse().join('-'));
         const end = dateTo
         const dates = [];
 
-        let currentDate = start;
+        let currentDate = new Date(start);
         while (currentDate <= end) {
-            const day = currentDate.getDay().toString().padStart(2, '0')
-            const month = currentDate.getMonth().toString().padStart(2, '0')
+            const day = currentDate.getDate().toString().padStart(2, '0')
+            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
             const year = currentDate.getFullYear().toString()
             dates.push(`${day}-${month}-${year}`);
             currentDate.setDate(currentDate.getDate() + 1);
         }
-        console.log(dates)
 
         return dates
     };
@@ -122,14 +130,6 @@ const Chart: React.FC<ChartProps> = ({ dateFrom, dateTo }) => {
 
     return (
         <div>
-            <div>
-                <button onClick={addSeries}>Add Series</button>
-                {seriesData.map(series => (
-                    <button key={series.name} onClick={() => removeSeries(series.name)}>
-                        Remove {series.name}
-                    </button>
-                ))}
-            </div>
             <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
         </div>
     );

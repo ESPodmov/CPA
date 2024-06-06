@@ -43,6 +43,21 @@ export const offerApi = createApi({
             })
         }),
 
+        connectOffer: builder.mutation<any, { pk: string | number }>({
+            query: ({ pk }) => ({
+                url: `api/offers/${pk}/connect/`,
+                method: "POST"
+            })
+        }),
+
+
+        getAllConnectedOffers: builder.query<any, void>({
+            query: () => ({
+                url: 'api/offers/all/connected/',
+                method: "GET"
+            })
+        })
+
     })
 })
 
@@ -53,4 +68,6 @@ export const {
     useGetOfferQuery,
     useUpdateOfferMutation,
     useLazyGetAllOffersQuery,
+    useLazyGetAllConnectedOffersQuery,
+    useConnectOfferMutation
 } = offerApi

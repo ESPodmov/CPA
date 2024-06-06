@@ -11,7 +11,7 @@ class BaseListViewMixin:
     serializer_class = PayoutSerializer
 
 
-class PayoutListView(ListAPIView, BaseListViewMixin, StatsFilteringMixin):
+class PayoutListView(StatsFilteringMixin, BaseListViewMixin, ListAPIView):
     cur_model = Payout
     filters = {"status": Payout.COMPLETED}
 

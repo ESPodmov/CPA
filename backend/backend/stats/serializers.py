@@ -1,7 +1,15 @@
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, Serializer, DateField, IntegerField
 from .models import Click, Conversion
 from authorization.models import User
 from offers.models import Offer
+
+
+class StatsSerializer(Serializer):
+    day = DateField()
+    count = IntegerField()
+
+    class Meta:
+        fields = ("day", "count")
 
 
 class ClickSerializer(ModelSerializer):

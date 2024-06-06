@@ -93,7 +93,8 @@ const Offers: React.FC = () => {
                                         reward_to={offer.reward_to}
                                         image={offer.image}
                                         target_action={offer.target_action_data.name}
-                                        dummy={offer.pk === 0 }
+                                        dummy={offer.pk === 0}
+                                        isConnected={offer.is_connected}
                                     />
                                 ))}
                             </div>

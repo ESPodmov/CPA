@@ -3,7 +3,7 @@ from .views import PartnerEditView, PartnerCreateView, PartnerListView, PartnerV
     OfferTypeEditView, OfferTypeCreateView, TargetActionListView, TargetActionView, TargetActionEditView, \
     TargetActionCreateView, OfferCategoryListView, OfferCategoryView, OfferCategoryEditView, OfferCategoryCreateView, \
     OfferMediaListView, OfferMediaEditView, OfferMediaCreateView, OfferListView, OfferView, OfferEditView, \
-    OfferCreateView
+    OfferCreateView, OfferConnectionView
 
 partner_urls = [
     path('<int:pk>/edit/', PartnerEditView.as_view(), name='partner-edit'),
@@ -43,7 +43,9 @@ offer_urls = [
     path('<int:pk>/edit/', OfferEditView.as_view(), name='offer-edit'),
     path('all/', OfferListView.as_view(), name='offer-all'),
     path('create/', OfferCreateView.as_view(), name='offer-create'),
-    path('<int:pk>/', OfferView.as_view(), name='offer-get')
+    path('<int:pk>/', OfferView.as_view(), name='offer-get'),
+    path('<int:pk>/connect/', OfferConnectionView.as_view(), name='offer-connection'),
+    path('all/connected/', OfferConnectionView.as_view(), name='connected-offers')
 ]
 
 urlpatterns = [

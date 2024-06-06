@@ -25,4 +25,5 @@ export type FullOfferData = Omit<BaseOfferData, "image"> & {
     image: string,
     target_action_data: FullTargetActionData,
     category_data: FullOfferCategoryData,
+    is_connected: boolean,
 }

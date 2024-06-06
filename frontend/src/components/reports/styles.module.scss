@@ -1,2 +1,78 @@
 @import "../../styles/styles.scss";
 @import "../../styles/typografy.scss";
+
+
+.controls_container {
+    display: flex;
+    justify-content: space-between;
+    background-color: $primary-light-color;
+    border: $content-container-border;
+    padding: 32px 24px;
+    border-radius: 8px;
+    align-items: center;
+
+
+    button {
+        height: fit-content;
+    }
+
+    .filter_button {
+        $content-color: #EC5C57;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: $content-color;
+        background: #FEEFEF;
+
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: $content-color;
+        }
+
+    }
+
+
+    .dates_controls_container {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+
+        .dates_container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gap_elem {
+            width: 16px;
+            height: 1px;
+            background: $primary-color;
+        }
+    }
+}
+
+
+.chart_container {
+    border: $content-container-border;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .chart_header {
+        padding: 24px;
+        background-color: #F5F7F9;
+
+        .content_container {
+            display: flex;
+            flex-direction: row;
+            gap: 32px;
+            justify-content: flex-start;
+        }
+    }
+
+    .chart {
+        padding: 40px 40px 32px 24px;
+        background-color: $primary-light-color;
+    }
+}

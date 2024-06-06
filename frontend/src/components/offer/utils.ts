@@ -9,14 +9,12 @@ export function splitTextByLineCount(text: string, maxLines: number, element: HT
     const words = text.split(' ');
     let currentText = '';
     let currentLines = 0;
-    console.log(words)
 
     element.innerText = '';
 
     for (let i = 0; i < words.length; i++) {
         const testText = currentText + (currentText ? ' ' : '') + words[i];
         element.innerText = testText;
-        console.log(testText)
         const lines = getLineCount(element);
 
         if (lines > maxLines) {

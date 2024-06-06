@@ -4,6 +4,7 @@ import uuid
 from django.db import models
 from .utils import set_token_exp_date, generate_secret
 from django.utils.translation import gettext_lazy as _
+from authorization.models import User
 
 
 class SecretKey(models.Model):
@@ -143,3 +144,11 @@ class Offer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UserOffer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='user_offers')
+
+    def __str__(self):
+        return f"{self.user} - {self.offer.name}"

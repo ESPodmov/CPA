@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import classes from './styles.module.scss'
-import { useGetOfferQuery } from "../../app/services/offer/offerApi";
+import { useConnectOfferMutation, useGetOfferQuery } from "../../app/services/offer/offerApi";
 import { useParams } from "react-router-dom";
 import CheckBox from "../common/checkBox/CheckBox";
 import { formatReward } from "../../utils/utils";
@@ -16,9 +16,10 @@ import { RootState } from "../../app/store";
 const Offer: React.FC = () => {
     const { pk } = useParams();
     const { data: offerData, error, isLoading } = useGetOfferQuery({ pk: pk ? pk : 0 })
-    console.log(offerData)
+    const [isActive, setIsActive] = useState(false)
     const [isRulesOpened, setRulesOpened] = useState(false);
     const [rulesStyle, setRulesStyle] = useState({ height: 0 })
+    const [connectOffer] = useConnectOfferMutation();
 
     const leftPartRef = useRef<HTMLDivElement>(null);
     const rightPartRef = useRef<HTMLDivElement>(null);
@@ -36,6 +37,10 @@ const Offer: React.FC = () => {
             const { leftText, rightText } = splitTextByLineCount(offerData.rules, 10, leftPartRef.current);
             setLeftText(leftText);
             setRightText(rightText);
+        }
+        if (offerData) {
+            console.log(offerData)
+            setIsActive(offerData.is_connected)
         }
     }, [offerData]);
 
@@ -89,6 +94,18 @@ const Offer: React.FC = () => {
         }
     }
 
+    const handleConnection = async () => {
+        try {
+            const agreementCheckbox = document.getElementById("agreement") as HTMLInputElement;
+            if (agreementCheckbox && agreementCheckbox.checked) {
+                await connectOffer({ pk: offerData.pk })
+                setIsActive(true)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
     return offerData ? (
         <>
@@ -110,10 +127,18 @@ const Offer: React.FC = () => {
                                     <span>Я согласен</span>
                                     <span className={classes.section_link}>с правилами оффера</span>
                                 </div>
-                            } />
-                            <button className={classes.big_btn}>
-                                Подключить
-                            </button>
+                            }
+                                checked={isActive} />
+                            {
+                                isActive ?
+                                    <button className={classes.active}>
+                                        Активен
+                                    </button>
+                                    :
+                                    <button className={classes.big_btn} onClick={handleConnection}>
+                                        Подключить
+                                    </button>
+                            }
                         </div>
                         <div className={classes.img_container}>
                             <img src={offerData.image} />

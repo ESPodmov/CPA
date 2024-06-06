@@ -2,15 +2,42 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view
 from rest_framework.generics import DestroyAPIView, UpdateAPIView, RetrieveAPIView, ListAPIView, \
     RetrieveUpdateDestroyAPIView, CreateAPIView, GenericAPIView
-from .models import Partner, OfferType, TargetAction, OfferCategory, OfferMedia, Offer
+from .models import Partner, OfferType, TargetAction, OfferCategory, OfferMedia, Offer, UserOffer
 from .serializers import PartnerSerializer, OfferTypeSerializer, TargetActionSerializer, OfferCategorySerializer, \
-    OfferMediaSerializer, OfferSerializer
+    OfferMediaSerializer, OfferSerializer, OfferConnectionsSerializer
 from authorization.permissions import IsAdmin
 from rest_framework.response import Response
 from stats.models import Click
 from authorization.models import User
 from django.shortcuts import redirect
 from authorization.permissions import IsAuthorized
+
+
+class OfferConnectionView(ListAPIView, CreateAPIView):
+    queryset = UserOffer.objects.all()
+    serializer_class = OfferConnectionsSerializer
+    permission_classes = [IsAuthorized]
+
+    def list(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return
+
+        queryset = UserOffer.objects.filter(user__pk=request.user.pk)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        offer_pk = kwargs.pop("pk")
+        if not offer_pk:
+            return Response({"error": "wrong url"}, status=status.HTTP_400_BAD_REQUEST)
+        if not request.user.is_authenticated:
+            return Response({"error": "denied"}, status=status.HTTP_403_FORBIDDEN)
+
+        offer = Offer.objects.get(pk=int(offer_pk))
+        UserOffer(user=User.objects.get(pk=request.user.pk), offer=offer).save()
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class PartnerBaseView(GenericAPIView):
@@ -150,11 +177,22 @@ class OfferListView(ListAPIView, OfferBaseView):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
+        for item in serializer.data:
+            item.update({"is_connected": True if UserOffer.objects.filter(user=request.user,
+                                                                          offer__pk=item.get("pk")) else False})
         return Response(serializer.data)
 
 
 class OfferView(RetrieveAPIView, OfferBaseView):
     permission_classes = [IsAuthorized]
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        is_connected = {"is_connected": True if UserOffer.objects.filter(user=request.user,
+                                                                         offer__pk=serializer.data.get(
+                                                                             "pk")) else False}
+        return Response({**serializer.data, **is_connected})
 
 
 class OfferEditView(UpdateAPIView, DestroyAPIView, OfferBaseView):
@@ -168,9 +206,7 @@ class OfferCreateView(CreateAPIView, OfferBaseView):
 @api_view(["GET"])
 def redirect_view(request, pk):
     partner = request.GET.get('partner', None)
-    print(partner)
     if partner:
-        print(request.query_params.get("pk"))
         offer = Offer.objects.get(pk=pk)
         user = User.objects.get(pk=int(partner))
         if not offer or not user:

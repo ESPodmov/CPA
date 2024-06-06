@@ -1,5 +1,5 @@
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, ImageField
-from .models import Partner, OfferType, OfferCategory, OfferMedia, Offer, TargetAction
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, ImageField, BooleanField
+from .models import Partner, OfferType, OfferCategory, OfferMedia, Offer, TargetAction, UserOffer
 
 
 class PartnerSerializer(ModelSerializer):
@@ -75,6 +75,7 @@ class OfferSerializer(ModelSerializer):
     target_action_data = TargetActionSerializer(read_only=True)
     type = PrimaryKeyRelatedField(queryset=OfferType.objects.all())
     image = ImageField(required=False, max_length=None, use_url=True)
+    # is_connected = BooleanField
 
     class Meta:
         model = Offer
@@ -92,18 +93,21 @@ class OfferSerializer(ModelSerializer):
             "rules",
             "target_action",
             "target_action_data",
-            "source_url"
+            "source_url",
+            # "is_connected"
         )
         read_only_fields = (
             "pk",
             "category_data",
             "target_action_data",
+            # "is_connected"
         )
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['category_data'] = OfferCategorySerializer(instance.category).data
         representation['target_action_data'] = TargetActionSerializer(instance.target_action).data
+        # representation['is_connected'] = UserOffer.objects.filter
         return representation
 
     def update(self, instance, validated_data):
@@ -112,3 +116,12 @@ class OfferSerializer(ModelSerializer):
             old_image.delete()
         validated_data.pop('medias', None)
         return super().update(instance, validated_data)
+
+
+class OfferConnectionsSerializer(ModelSerializer):
+    class Meta:
+        model = UserOffer
+        fields = (
+            "user",
+            "offer"
+        )

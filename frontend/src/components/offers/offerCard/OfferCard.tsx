@@ -11,10 +11,11 @@ interface OfferCardProps {
     reward_to: number | null;
     image: string;
     target_action: string;
-    dummy: boolean
+    dummy: boolean;
+    isConnected: boolean
 }
 
-const OfferCard: React.FC<OfferCardProps> = ({ pk, name, reward_from, reward_to, image, target_action, dummy }) => {
+const OfferCard: React.FC<OfferCardProps> = ({ pk, name, reward_from, reward_to, image, target_action, dummy, isConnected }) => {
     const navigate = useNavigate();
 
 
@@ -49,9 +50,16 @@ const OfferCard: React.FC<OfferCardProps> = ({ pk, name, reward_from, reward_to,
                         <button className={`${classes.secondary}`} onClick={handleAboutBtnClick}>
                             Подробнее
                         </button>
-                        <button onClick={handleAboutBtnClick}>
-                            Подключить
-                        </button>
+                        {
+                            isConnected ?
+                                <button className={classes.active}>
+                                    Активен
+                                </button>
+                                :
+                                <button onClick={handleAboutBtnClick}>
+                                    Подключить
+                                </button>
+                        }
                     </div>
                 </div>
             </div >

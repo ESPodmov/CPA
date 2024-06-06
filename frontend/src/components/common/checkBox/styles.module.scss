@@ -9,10 +9,26 @@
     align-items: center;
     margin-bottom: 32px;
 
+    &.chart {
+        margin-bottom: 0;
+        width: fit-content;
+    }
+
 
     .checkbox {
         position: relative;
         display: inline-block;
+
+        &.chart {
+
+            .checkmark {
+                border: 2px solid $content-border-color;
+
+                &::before {
+                    background-color: $content-border-color;
+                }
+            }
+        }
 
         input[type="checkbox"] {
             opacity: 0;
@@ -36,6 +52,7 @@
 
             &::before {
                 background-color: #ebe9e9;
+
             }
         }
 

@@ -1,14 +1,18 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
 import { ReactComponent as CalendarIcon } from '../../../images/calendarIcon.svg'
 import classes from './styles.module.scss'
+import Calendar from "./calendar/Calendar";
 
 
 interface DatePickerProps {
+    dateRange?: boolean,
     isStart?: boolean,
-    isEnd?: boolean,
+    startDate?: Date,
+    endDate?: Date,
     date: Date,
     format: string,
-    name: string
+    name: string,
+    onChange: (date: Date) => void;
 }
 
 
@@ -27,8 +31,10 @@ const getDateFromFormat = (dateString: string, format: string) => {
     return date
 }
 
-const DatePicker: React.FC<DatePickerProps> = ({ isEnd, isStart, date, format, name }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ isStart, date, format, name, dateRange, endDate, startDate, onChange }) => {
     const [value, setValue] = useState<string>(formatDateForInput(date, format));
+    const [showCalendar, setShowCalendar] = useState(false)
+    const pickerRef = useRef<HTMLDivElement>(null);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const date = getDateFromFormat(event.target.value, format)
@@ -36,14 +42,50 @@ const DatePicker: React.FC<DatePickerProps> = ({ isEnd, isStart, date, format, n
         setValue(event.target.value)
     }
 
+    const selectDate = (date: Date) => {
+        setValue(formatDateForInput(date, format))
+        onChange(date)
+    }
+
+    const handleInputClick = () => {
+        setShowCalendar(!showCalendar)
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (pickerRef.current && !pickerRef.current.contains(event.target as Node)) {
+            setShowCalendar(false);
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <>
-            <div className={classes.picker_container}>
-                <input value={value} name={name} id={name} onChange={handleChange} />
+        <div ref={pickerRef} style={{width: 'fit-content'}}>
+            <div className={classes.picker_container} onClick={handleInputClick} >
+                <input value={value} name={name} id={name} onChange={handleChange} readOnly/>
                 <CalendarIcon className={classes.icon} />
             </div>
-            
-        </>
+            {
+                showCalendar && (
+                    dateRange ? (
+                        isStart ? (
+                            <Calendar date={date} onChange={selectDate} isStart={isStart} endDate={endDate} />
+                        ) : (
+                            <Calendar date={date} onChange={selectDate} isStart={isStart} startDate={startDate} />
+                        )
+                    ) : (
+                        <Calendar date={date} onChange={selectDate} />
+                    )
+                )
+
+            }
+
+        </div>
     )
 }
 

@@ -45,4 +45,13 @@ button {
   &.big_btn {
     padding: 8px 40px;
   }
+
+  &.active {
+    background: #FEEFEF;
+    color: #EC5C57;
+    cursor: auto;
+    &:hover {
+      background-color: #FEEFEF;
+    }
+  }
 }
