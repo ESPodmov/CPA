@@ -69,5 +69,6 @@ export const {
     useUpdateOfferMutation,
     useLazyGetAllOffersQuery,
     useLazyGetAllConnectedOffersQuery,
+    useGetAllConnectedOffersQuery,
     useConnectOfferMutation
 } = offerApi

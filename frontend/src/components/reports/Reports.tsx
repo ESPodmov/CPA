@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import Chart from '../chart/Chart'
 import classes from './styles.module.scss'
 import DatePicker from '../common/datePicker/DatePicker'
@@ -8,6 +8,8 @@ import { useLazyGetAllClicksQuery } from '../../app/services/clickApi'
 import { useLazyGetAllConverionsQuery } from '../../app/services/conversionApi'
 import { useLazyGetAllPayoutsQuery } from '../../app/services/payoutsApi'
 import { color } from 'echarts'
+import { useGetAllConnectedOffersQuery } from '../../app/services/offer/offerApi'
+import { FullOfferData } from '../../types/api/offerTypes'
 
 
 const chartDatas = {
@@ -48,6 +50,13 @@ export interface ChartData {
     color: string;
 }
 
+interface FilterData {
+    offerPk?: number;
+    from?: string;
+    to?: string;
+    partnerName?: string;
+}
+
 
 const Reports: React.FC = () => {
     const currDate = new Date()
@@ -66,6 +75,18 @@ const Reports: React.FC = () => {
     const [getClicks, { error: clicksError, isLoading: clicksIsLoading }] = useLazyGetAllClicksQuery();
     const [getConversions, { error: conversionsError, isLoading: conversionsIsLoading }] = useLazyGetAllConverionsQuery();
     const [getPayouts, { error: payoutsError, isLoading: payoutsIsLoading }] = useLazyGetAllPayoutsQuery();
+    const { data: allConnectedOffers } = useGetAllConnectedOffersQuery();
+    const [connectedOffers, setConnectedOffers] = useState<FullOfferData[]>([])
+    const [selectedOffers, setSelectedOffers] = useState<number[]>([])
+
+    // const [filter, setFilter] = useState<FilterData>({})
+
+
+    useEffect(() => {
+        if (allConnectedOffers) {
+            setConnectedOffers(allConnectedOffers)
+        }
+    }, [allConnectedOffers])
 
     const handleChangeDateFrom = (event: React.ChangeEvent<HTMLInputElement>) => {
         const date = new Date(event.target.value)
@@ -140,7 +161,7 @@ const Reports: React.FC = () => {
                     if (name in chartDatas) {
                         seriesData.push({
                             name: chartDatas[name].caption,
-                            data: statData.map(item => item.count ? item.count : ""),
+                            data: statData.map(item => item.count ? item.count : 0),
                             color: chartDatas[name].color
                         })
                     }
@@ -163,6 +184,17 @@ const Reports: React.FC = () => {
             <h1 className={classes.content_header}>
                 Отчеты
             </h1>
+            {/* <div className={classes.offers_types_container}>
+                {allConnectedOffers.map((offer) => (
+                    <button
+                        key={offer.pk}
+                        className={`${classes.offer_type} ${activeCategory === offer.pk ? classes.active : ''}`}
+                        onClick={() => handleCategoryClick(offer.pk)}
+                    >
+                        {offer.name}
+                    </button>
+                ))}
+            </div> */}
             <div className={classes.controls_container}>
                 <div className={classes.dates_controls_container}>
                     <div className={classes.dates_container}>

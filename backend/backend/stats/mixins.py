@@ -59,8 +59,8 @@ class StatsFilteringMixin:
                 date_to = timezone.now() + timezone.timedelta(days=1)
                 date_to = get_date_start(date_to)
 
-            date_from = date_from.replace(tzinfo=timezone.utc).astimezone(moscow_tz)
-            date_to = date_to.replace(tzinfo=timezone.utc).astimezone(moscow_tz)
+            date_from = date_from.replace(tzinfo=timezone.timezone.utc).astimezone(moscow_tz)
+            date_to = date_to.replace(tzinfo=timezone.timezone.utc).astimezone(moscow_tz)
 
             filters = getattr(self, "filters", {})
             # queryset = self.cur_model.objects.filter(user__pk=partner, date__range=(date_from, date_to), **filters)
