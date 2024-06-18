@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ isLoginPage }) => {
 
     let logoClassName = `${classes.logo} ${classes.main_text} `;
     logoClassName = logoClassName + (isLoginPage ? classes.dark : classes.light);
-    const user = useSelector((state: RootState) => state.user.user)
+    const user = useSelector((state: RootState) => state?.user.user)
 
     const containerClassName = classes.header_container + (isLoginPage ? "" : ` ${classes.main_page}`)
     const logoLink = isLoginPage ? routes.register.path : routes.profile.path
@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({ isLoginPage }) => {
     return (
         <header>
             <div className={containerClassName}>
-                <Link to={logoLink} className={classes.link}>
+                <Link to={routes.profile.path} className={classes.link}>
                     <div className={logoClassName}>Tronius</div>
                 </Link>
                 {
@@ -67,9 +67,6 @@ const Header: React.FC<HeaderProps> = ({ isLoginPage }) => {
                         </button>
                         :
                         <div className={classes.controls_container}>
-                            <Link to={routes.support.path} className={`${classes.link} ${classes.item} ${classes.light}`}>
-                                Поддержка
-                            </Link>
                             <Link to={routes.news.path} className={`${classes.link} ${classes.item} ${classes.light}`}>
                                 Новости
                             </Link>

@@ -12,11 +12,9 @@ const SideMenu: React.FC = () => {
 
     return (
         <div className={classes.side_menu_container}>
-            <SideMenuItem Icon={HomeIcon} text="Главная" url={routes.home.path}/>
+            <SideMenuItem Icon={HomeIcon} text="Профиль" url={routes.profile.path}/>
             <SideMenuItem Icon={ReportIcon} text="Отчеты" url={routes.reports.path}/>
-            <SideMenuItem Icon={UnloadIcon} text="Выгрузки" url={routes.unload.path}/>
             <SideMenuItem Icon={OfferIcon} text="Офферы" url={routes.offers.path}/>
-            <SideMenuItem Icon={LinkIcon} text="Мои ссылки" url={routes.my_links.path}/>
         </div>
     )
 }

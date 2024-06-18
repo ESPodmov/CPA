@@ -9,7 +9,7 @@ interface MainPageProps {
 }
 
 const MainPage: React.FC<MainPageProps> = ({component}) => {
-    document.body.style.backgroundColor = '#292929'
+    document.body.style.backgroundColor = '#303030'
 
     return (
         <div className={classes.content_container}>
